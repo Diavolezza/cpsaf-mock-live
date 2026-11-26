@@ -156,20 +156,12 @@ async function main() {
     const asked = askedIndices(state, questions.length);
     let total = 0;
     let max = 0;
-    const rows = [];
-    questions.forEach((q, i) => {
-      const key = qkey(i);
-      if (state.skipped?.[key]) {
-        rows.push(h('tr.skipped', h('td', i + 1), h('td', L.skipped)));
-        return;
-      }
-      if (!asked.includes(i)) return;
-      const ans = mine[key] ? decodeAnswer(q, mine[key].a) : null;
-      const p = ans ? scoreQuestion(q, ans) : 0;
-      total += p;
+    for (const i of asked) {
+      const q = questions[i];
+      const ans = mine[qkey(i)] ? decodeAnswer(q, mine[qkey(i)].a) : null;
+      total += ans ? scoreQuestion(q, ans) : 0;
       max += q.points;
-      rows.push(h('tr', h('td', h('a', { href: `#d${i + 1}` }, i + 1)), h('td', ans ? `${fmt(p, lang)} / ${fmt(q.points, lang)}` : `0 / ${fmt(q.points, lang)} · ${L.notSubmitted}`)));
-    });
+    }
     const pct = max ? (total / max) * 100 : 0;
     const pass = pct >= PASS_PERCENT;
 
@@ -196,8 +188,6 @@ async function main() {
       h('p.percent', `${fmt(pct, lang)} %`),
       h('p.verdict' + (pass ? '.pass' : '.fail'), pass ? L.passed : L.failed),
       h('div.actions.noprint', h('button.primary', { type: 'button', onclick: () => window.print() }, L.savePdf), h('span.small', L.savePdfHint)),
-      h('h3', L.perQuestion),
-      h('table.points', h('thead', h('tr', h('th', L.colQuestion), h('th', L.colPoints))), h('tbody', rows)),
       h('h3', L.details),
       legend(lang),
       details,
