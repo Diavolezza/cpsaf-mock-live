@@ -72,6 +72,12 @@ export function makeStore(db) {
     watchAllAnswers: (code, cb) => db.watch(`answers/${code}`, (v) => cb(v || {})),
 
     // admin
+    async listAllSessions() {
+      const all = await db.get('sessions');
+      return Object.entries(all || {})
+        .map(([code, s]) => ({ code, ...s }))
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    },
     watchRequests: (cb) => db.watch('trainerRequests', (v) => cb(v || {})),
     watchTrainers: (cb) => db.watch('trainers', (v) => cb(v || {})),
     async approve(uid, req) {

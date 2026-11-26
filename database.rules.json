@@ -20,21 +20,21 @@
       }
     },
     "sessions": {
-      // trainers list their own sessions
-      ".read": "auth != null && query.orderByChild == 'owner' && query.equalTo == auth.uid",
+      // trainers list their own sessions, admins list all sessions
+      ".read": "auth != null && ((query.orderByChild == 'owner' && query.equalTo == auth.uid) || root.child('admins').child(auth.uid).val() == true)",
       ".indexOn": ["owner"],
       "$code": {
         // anyone signed in (also anonymous participants) may read a session they know the code of
         ".read": "auth != null",
-        // trainers create sessions, only the owner changes or deletes them
-        ".write": "auth != null && ((!data.exists() && root.child('trainers').child(auth.uid).exists() && newData.child('owner').val() == auth.uid) || data.child('owner').val() == auth.uid)",
+        // trainers create sessions, only the owner changes them; the owner or an admin deletes them
+        ".write": "auth != null && ((!data.exists() && root.child('trainers').child(auth.uid).exists() && newData.child('owner').val() == auth.uid) || data.child('owner').val() == auth.uid || (!newData.exists() && root.child('admins').child(auth.uid).val() == true))",
         ".validate": "!newData.exists() || (newData.hasChildren(['owner', 'catalog', 'lang', 'state']) && newData.child('owner').val() == (data.exists() ? data.child('owner').val() : auth.uid))"
       }
     },
     "participants": {
       "$code": {
         ".read": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
-        ".write": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
+        ".write": "auth != null && (root.child('sessions').child($code).child('owner').val() == auth.uid || (!newData.exists() && root.child('admins').child(auth.uid).val() == true))",
         "$uid": {
           ".read": "auth != null && auth.uid == $uid",
           ".write": "auth != null && auth.uid == $uid && root.child('sessions').child($code).exists()"
@@ -44,7 +44,7 @@
     "presence": {
       "$code": {
         ".read": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
-        ".write": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
+        ".write": "auth != null && (root.child('sessions').child($code).child('owner').val() == auth.uid || (!newData.exists() && root.child('admins').child(auth.uid).val() == true))",
         "$uid": {
           ".write": "auth != null && auth.uid == $uid && (!newData.exists() || root.child('sessions').child($code).exists())",
           ".validate": "newData.val() == true"
@@ -53,9 +53,9 @@
     },
     "answers": {
       "$code": {
-        // the trainer reads all answers of his session (and may delete them with the session)
+        // the trainer reads all answers of his session; the trainer or an admin deletes them with the session
         ".read": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
-        ".write": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid && !newData.exists()",
+        ".write": "auth != null && !newData.exists() && (root.child('sessions').child($code).child('owner').val() == auth.uid || root.child('admins').child(auth.uid).val() == true)",
         "$uid": {
           ".read": "auth != null && auth.uid == $uid",
           "$q": {

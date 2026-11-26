@@ -115,7 +115,7 @@ export function createLocalAuth() {
   return {
     demo: true,
     onChange(cb) {
-      queueMicrotask(() => cb({ uid: tabUid(), name: 'Demo', login: 'demo', isTrainer: true, isAdmin: false }));
+      queueMicrotask(() => cb({ uid: tabUid(), name: 'Demo', login: 'demo', isTrainer: true, isAdmin: true }));
       return () => {};
     },
     async signIn() {},

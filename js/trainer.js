@@ -138,14 +138,16 @@ async function dashboard() {
         }, L.delete)),
     )))) : h('p', L.noSessions));
 
-  if (user.isAdmin) adminPanel(adminBox);
+  if (user.isAdmin) adminPanel(adminBox, index);
 }
 
-function adminPanel(box) {
+function adminPanel(box, index) {
   const L = t(uiLang);
   const reqs = h('div');
   const trainers = h('div');
-  box.replaceChildren(h('main.card', h('h2', L.requests), reqs, h('h2', L.trainers), trainers));
+  const all = h('div', h('p', '…'));
+  let trainerNames = {};
+  box.replaceChildren(h('main.card', h('h2', L.requests), reqs, h('h2', L.trainers), trainers, h('h2', L.allSessions), all));
   stopSession.push(store.watchRequests((r) => {
     const e = Object.entries(r);
     reqs.replaceChildren(e.length ? h('table.list', h('tbody', e.map(([uid, q]) => h('tr',
@@ -156,6 +158,7 @@ function adminPanel(box) {
     )))) : h('p.small', '–'));
   }));
   stopSession.push(store.watchTrainers((tr) => {
+    trainerNames = tr;
     trainers.replaceChildren(h('table.list', h('tbody', Object.entries(tr).map(([uid, x]) => h('tr',
       h('td', x.name || ''), h('td.mono', x.login ? '@' + x.login : ''),
       h('td.right', uid === user.uid ? '' : h('button.danger', {
@@ -163,6 +166,55 @@ function adminPanel(box) {
       }, L.delete)),
     )))));
   }));
+  allSessions(all, index, () => trainerNames);
+}
+
+// admin: sessions of all trainers, delete single ones or all older than n days
+async function allSessions(box, index, names) {
+  const L = t(uiLang);
+  let sessions;
+  try {
+    sessions = await store.listAllSessions();
+  } catch (e) {
+    console.error(e);
+    box.replaceChildren(h('p.error', L.rulesOutdated));
+    return;
+  }
+  const reload = () => route(); // re-renders the overview, "my sessions" included
+  const days = h('input#days', { type: 'number', min: 1, value: 30, style: 'width:5em' });
+  const purge = async () => {
+    const limit = Date.now() - Number(days.value) * 86400000;
+    const old = sessions.filter((s) => (s.createdAt || 0) < limit);
+    if (!old.length) return alert(L.nothingOld);
+    if (!confirm(L.purgeConfirm(old.length, days.value))) return;
+    for (const s of old) await store.deleteSession(s.code);
+    reload();
+  };
+  const ownerName = (uid) => {
+    const n = names()[uid];
+    return n ? n.name || '@' + n.login : uid === user.uid ? user.name : uid.slice(0, 8) + '…';
+  };
+  box.replaceChildren(
+    h('form.row', { onsubmit: (e) => { e.preventDefault(); purge(); } },
+      h('label', L.olderThan, days),
+      h('button.danger', { type: 'submit' }, L.purge)),
+    sessions.length ? h('table.list', h('tbody', sessions.map((s) => h('tr',
+      h('td.mono', s.code),
+      h('td', ownerName(s.owner)),
+      h('td', index.find((c) => c.file === s.catalog)?.title[uiLang] || s.catalog),
+      h('td', s.lang.toUpperCase()),
+      h('td', s.createdAt ? new Date(s.createdAt).toLocaleString(uiLang) : ''),
+      h('td', L.phase[s.state?.phase] || ''),
+      h('td.right', h('button.danger', {
+        type: 'button',
+        onclick: async () => {
+          if (!confirm(L.deleteConfirm(s.code))) return;
+          await store.deleteSession(s.code);
+          reload();
+        },
+      }, L.delete)),
+    )))) : h('p', L.noSessions),
+  );
 }
 
 // ---------- running session ----------

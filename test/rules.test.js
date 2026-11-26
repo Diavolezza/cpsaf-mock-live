@@ -103,3 +103,23 @@ test('trainer requests and approval', async () => {
   await assertFails(set(ref(db('trainer', github), 'trainers/other'), { name: 'O', login: 'o' }));
   await assertFails(set(ref(db('newbie', github), 'admins/newbie'), true));
 });
+
+test('admin lists and deletes sessions of other trainers, but cannot read their answers', async () => {
+  await assertSucceeds(set(ref(db('p1', anon), `answers/${CODE}/p1/q2`), answer('0')));
+  const boss = db('boss', github);
+  await assertSucceeds(get(ref(boss, 'sessions')));
+  await assertFails(get(ref(db('trainer', github), 'sessions')));
+  await assertFails(get(ref(boss, `answers/${CODE}`)));
+  await assertFails(set(ref(boss, `sessions/${CODE}/state`), { phase: 'finished', index: 2, qkey: 'q2' }));
+  await assertSucceeds(remove(ref(boss, `answers/${CODE}`)));
+  await assertSucceeds(remove(ref(boss, `participants/${CODE}`)));
+  await assertSucceeds(remove(ref(boss, `presence/${CODE}`)));
+  await assertSucceeds(remove(ref(boss, `sessions/${CODE}`)));
+});
+
+test('a trainer cannot delete sessions of others', async () => {
+  const other = db('other', github);
+  await env.withSecurityRulesDisabled((ctx) => set(ref(ctx.database(), 'trainers/other'), { name: 'O', login: 'o' }));
+  await assertFails(remove(ref(other, `sessions/${CODE}`)));
+  await assertFails(remove(ref(other, `answers/${CODE}`)));
+});
