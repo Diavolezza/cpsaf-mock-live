@@ -13,7 +13,7 @@ let uiLang = localStorage.getItem('cpsaf-ui-lang') || browserLang();
 let auth, store, user;
 let stopSession = [];
 
-const show = (...nodes) => app.replaceChildren(...nodes);
+const show = (...nodes) => app.replaceChildren(...nodes.filter(Boolean));
 const clean = (o) => JSON.parse(JSON.stringify(o)); // Firebase rejects undefined values
 
 function joinUrl(code) {

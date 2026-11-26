@@ -13,7 +13,7 @@ const code = (params.get('s') || '').toUpperCase().trim();
 let lang = browserLang();
 
 function show(...nodes) {
-  app.replaceChildren(...nodes);
+  app.replaceChildren(...nodes.filter(Boolean));
 }
 
 function demoBanner() {
