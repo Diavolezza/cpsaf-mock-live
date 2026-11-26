@@ -134,6 +134,7 @@ table.ktable td.kcell.correct { background: var(--good-bg); }
 .bar .track { flex: 1; height: 16px; background: #eceae4; border-radius: 5px; overflow: hidden; }
 .bar .fill { height: 100%; background: #9aa6b8; }
 .bar.good .fill { background: var(--good); }
+.bar.bad .fill { background: #c9675e; }
 .bar .track { min-width: 0; }
 .barlabel { font-size: .85rem; font-weight: 600; color: var(--muted); flex: 0 0 6.5em; text-align: right; white-space: nowrap; }
 

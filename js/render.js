@@ -154,11 +154,12 @@ function kCards(q, lang, mode, { selection = [], onChange, locked, mine }) {
 
 function bar(count, n, correct, lang) {
   const pct = n ? Math.round((count / n) * 100) : 0;
-  return meter(pct, `${pct} % (${count})`, correct);
+  // trainer solution: votes for the correct answer green, for a wrong answer red
+  return meter(pct, `${pct} % (${count})`, correct, !correct);
 }
 
-export function meter(pct, label, good) {
-  return h('div.bar' + (good ? '.good' : ''),
+export function meter(pct, label, good, bad = false) {
+  return h('div.bar' + (good ? '.good' : bad ? '.bad' : ''),
     h('div.track', h('div.fill', { style: `width:${pct}%` })),
     h('span.barlabel', label),
   );
