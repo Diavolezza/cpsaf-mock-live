@@ -97,7 +97,8 @@ ol.options { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; 
 
 /* trainer: compact solution view */
 ol.options.stats .opt { flex-wrap: nowrap; padding: 8px 12px; }
-ol.options.stats .bar { flex: 0 0 36%; margin-top: 0; }
+ol.options.stats .otext { min-width: 0; }
+ol.options.stats .bar { flex: 0 0 38%; min-width: 0; margin-top: 0; }
 table.ktable { border-collapse: separate; border-spacing: 0 6px; }
 table.ktable th { border: 0; padding: 0 10px; color: var(--muted); font-weight: 600; }
 table.ktable th.kcat { width: 24%; text-align: left; }
@@ -133,7 +134,8 @@ table.ktable td.kcell.correct { background: var(--good-bg); }
 .bar .track { flex: 1; height: 16px; background: #eceae4; border-radius: 5px; overflow: hidden; }
 .bar .fill { height: 100%; background: #9aa6b8; }
 .bar.good .fill { background: var(--good); }
-.barlabel { font-size: .85rem; font-weight: 600; color: var(--muted); min-width: 5.5em; white-space: nowrap; }
+.bar .track { min-width: 0; }
+.barlabel { font-size: .85rem; font-weight: 600; color: var(--muted); flex: 0 0 6.5em; text-align: right; white-space: nowrap; }
 
 /* trainer beamer layout */
 body.trainer .card.beamer .qtext { font-size: clamp(1.4rem, 2.2vw, 2rem); }
