@@ -91,18 +91,18 @@ try {
   step('participants joined');
 
   // Q1 (A, correct = c): p0 correct, p1 wrong
-  await tr.click('text=Start mock exam');
+  await tr.getByRole('button', { name: 'Start mock exam', exact: true }).click();
   const answer = async (p, nth) => {
     await p.waitForSelector('ol.options');
     for (const n of nth) await p.click(`ol.options li:nth-child(${n}) button`);
-    await p.click('text=Submit answer');
-    await p.click('text=Yes, submit');
+    await p.getByRole('button', { name: 'Submit answer', exact: true }).click();
+    await p.getByRole('button', { name: 'Yes, submit', exact: true }).click();
     await p.waitForSelector('text=Submitted');
   };
   await answer(ps[0], [3]);
   await answer(ps[1], [1]);
   await tr.waitForSelector('text=2 submitted');
-  await tr.click('text=Show solution');
+  await tr.getByRole('button', { name: 'Show solution', exact: true }).click();
   await tr.waitForSelector('.bar');
   assert.match(await ps[0].innerText('.status'), /1 of 1/);
   assert.match(await ps[1].innerText('.status'), /0 of 1/);
@@ -123,25 +123,25 @@ try {
   assert.ok(refused, 'rules must refuse a second answer');
 
   // Q2 skipped, Q3 (P pick 4, correct c,e,f,g): p0 all correct; pause/reload in between
-  await tr.click('text=Next question');
+  await tr.getByRole('button', { name: 'Next question', exact: true }).click();
   await tr.waitForSelector('text=Question 2 of 38');
-  await tr.click('text=Skip question');
+  await tr.getByRole('button', { name: 'Skip question', exact: true }).click();
   await tr.waitForSelector('text=Question 3 of 38');
   await answer(ps[0], [3, 5, 6, 7]);
-  await tr.click('text=Break');
+  await tr.getByRole('button', { name: 'Break', exact: true }).click();
   await ps[1].waitForSelector('h1.pause');
   await ps[1].reload();
   await ps[1].waitForSelector('h1.pause');
-  await tr.click('text=Continue');
+  await tr.getByRole('button', { name: 'Continue', exact: true }).click();
   await ps[0].waitForSelector('text=Submitted');
-  await tr.click('text=Show solution');
+  await tr.getByRole('button', { name: 'Show solution', exact: true }).click();
   await ps[0].waitForSelector('text=Your points');
   assert.match(await ps[1].innerText('.status'), /Not submitted/);
   step('pause, skip, question 3');
 
   // finish -> results
   tr.on('dialog', (d) => d.accept());
-  await tr.click('text=Finish');
+  await tr.getByRole('button', { name: 'Finish', exact: true }).click();
   await tr.waitForSelector('.kpis');
   await ps[0].waitForSelector('.percent');
   assert.match(await ps[0].innerText('.result'), /3 of 3 points/);
