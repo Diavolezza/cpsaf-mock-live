@@ -1,7 +1,9 @@
 // Domain operations on top of the small database API (db-local.js / db-firebase.js).
 //
 // Data layout (same in Firebase and in demo mode):
-//   sessions/{code}        { owner, catalog, lang, createdAt, state: { phase, index, qkey, skipped: {q3: true} } }
+//   sessions/{code}        { owner, catalog, lang, createdAt, order?, state: { phase, index, qkey, skipped: {q3: true} } }
+//                          order: catalogue indices in the order of this session (missing = catalogue order);
+//                          index/qkey count positions in this order
 //   participants/{code}/{uid}  { joinedAt }
 //   presence/{code}/{uid}      true while the participant's browser is connected
 //   answers/{code}/{uid}/{qkey} { a: "0,2", t }   qkey = "q" + question index
@@ -12,18 +14,30 @@
 const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 export const qkey = (index) => `q${index}`;
 
+// random permutation of 0..n-1 (Fisher-Yates)
+export function shuffled(n) {
+  const a = Array.from({ length: n }, (_, i) => i);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export function makeStore(db) {
   return {
     uid: db.uid,
     demo: db.demo,
 
-    async createSession({ catalog, lang }) {
+    // shuffle: number of questions -> the questions are asked in a random order (same for everybody)
+    async createSession({ catalog, lang, shuffle = 0 }) {
       for (let attempt = 0; attempt < 20; attempt++) {
         const code = Array.from({ length: 5 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join('');
         if (await db.get(`sessions/${code}/owner`).catch(() => null)) continue;
         await db.set(`sessions/${code}`, {
           owner: db.uid, catalog, lang, createdAt: db.now(),
           state: { phase: 'lobby', index: 0, qkey: qkey(0) },
+          ...(shuffle ? { order: shuffled(shuffle) } : {}),
         });
         return code;
       }

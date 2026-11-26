@@ -96,7 +96,6 @@ try {
     await p.waitForSelector('ol.options');
     for (const n of nth) await p.click(`ol.options li:nth-child(${n}) button`);
     await p.getByRole('button', { name: 'Submit answer', exact: true }).click();
-    await p.getByRole('button', { name: 'Yes, submit', exact: true }).click();
     await p.waitForSelector('text=Submitted');
   };
   await answer(ps[0], [3]);

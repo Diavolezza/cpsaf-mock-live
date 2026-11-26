@@ -61,20 +61,19 @@ async function main() {
   lang = session.lang;
   document.documentElement.lang = lang;
   const catalog = await loadCatalog(session.catalog);
-  const questions = catalog.questions;
+  const order = session.order || catalog.questions.map((_, k) => k);
+  const questions = order.map((k) => catalog.questions[k]); // in the order of this session
   document.title = catalog.title[lang];
   await store.join(code);
 
   let state = session.state;
   let mine = {};
   const selection = {}; // qkey -> current (not yet submitted) answer
-  let confirming = false;
   let error = null;
 
   store.watchSession(code, (s) => {
     if (!s) return joinForm(t(lang).joinUnknown);
     if (s.state.qkey !== state.qkey || s.state.phase !== state.phase) {
-      confirming = false;
       error = null;
     }
     state = s.state;
@@ -118,37 +117,28 @@ async function main() {
         const sel = selection[key] ?? (q.type === 'K' ? q.rows.map(() => null) : []);
         card.append(questionBody(q, lang, 'input', {
           selection: sel,
-          locked: confirming,
           onChange: (next) => {
             selection[key] = next;
             render();
           },
         }));
         if (error) card.append(h('p.error', error));
-        if (!confirming) {
-          card.append(h('div.actions', h('button.primary.big', { type: 'button', onclick: () => { confirming = true; render(); } }, L.submit)));
-        } else {
-          card.append(h('div.confirm',
-            h('p', h('strong', L.submitConfirm), ' ', L.submitHint),
-            h('div.actions',
-              h('button', { type: 'button', onclick: () => { confirming = false; render(); } }, L.confirmNo),
-              h('button.primary.big', {
-                type: 'button',
-                onclick: async (e) => {
-                  e.target.disabled = true;
-                  try {
-                    await store.submitAnswer(code, i, encodeAnswer(q, sel));
-                  } catch (err) {
-                    console.error(err);
-                    error = L.submitFailed;
-                  }
-                  confirming = false;
-                  render();
-                },
-              }, L.confirmYes),
-            ),
-          ));
-        }
+        card.append(h('div.actions',
+          h('button.primary', {
+            type: 'button',
+            onclick: async (e) => {
+              e.target.disabled = true;
+              try {
+                await store.submitAnswer(code, i, encodeAnswer(q, sel));
+              } catch (err) {
+                console.error(err);
+                error = L.submitFailed;
+                render();
+              }
+            },
+          }, L.submit),
+          h('span.small', L.submitHint),
+        ));
       }
     } else if (phase === 'revealed') {
       card.append(questionBody(q, lang, 'result', { mine: submitted }));
@@ -178,17 +168,40 @@ async function main() {
       const p = ans ? scoreQuestion(q, ans) : 0;
       total += p;
       max += q.points;
-      rows.push(h('tr', h('td', i + 1), h('td', ans ? `${fmt(p, lang)} / ${fmt(q.points, lang)}` : `0 / ${fmt(q.points, lang)} · ${L.notSubmitted}`)));
+      rows.push(h('tr', h('td', h('a', { href: `#d${i + 1}` }, i + 1)), h('td', ans ? `${fmt(p, lang)} / ${fmt(q.points, lang)}` : `0 / ${fmt(q.points, lang)} · ${L.notSubmitted}`)));
     });
     const pct = max ? (total / max) * 100 : 0;
     const pass = pct >= PASS_PERCENT;
-    return h('main.card',
+
+    // every answered question again, with own answer and solution
+    const details = asked.map((i) => {
+      const q = questions[i];
+      const ans = mine[qkey(i)] ? decodeAnswer(q, mine[qkey(i)].a) : null;
+      const p = ans ? scoreQuestion(q, ans) : 0;
+      const cls = !ans ? '.missing' : p === q.points ? '.full' : p > 0 ? '.partial' : '.zero';
+      return h('section.detail' + cls, { id: `d${i + 1}` },
+        h('div.dhead',
+          h('span.qnum', L.questionOf(i + 1, questions.length)),
+          h('span.qtype', L.typeLabel[q.type]),
+          h('span.dpoints', ans ? L.yourPoints(p, q.points) : L.notSubmitted),
+        ),
+        questionText(q, lang),
+        questionBody(q, lang, 'result', { mine: ans }),
+      );
+    });
+
+    return h('main.card.results',
       h('h1', L.finishedTitle),
       h('p.result', L.resultLine(total, max)),
       h('p.percent', `${fmt(pct, lang)} %`),
       h('p.verdict' + (pass ? '.pass' : '.fail'), pass ? L.passed : L.failed),
+      h('div.actions.noprint', h('button.primary', { type: 'button', onclick: () => window.print() }, L.savePdf), h('span.small', L.savePdfHint)),
       h('h3', L.perQuestion),
       h('table.points', h('thead', h('tr', h('th', L.colQuestion), h('th', L.colPoints))), h('tbody', rows)),
+      h('h3', L.details),
+      legend(lang),
+      details,
+      h('p.small.printonly', catalog.source?.[lang]),
     );
   }
 

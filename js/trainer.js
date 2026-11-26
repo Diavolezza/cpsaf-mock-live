@@ -5,7 +5,7 @@ import { loadIndex, loadCatalog } from './catalog.js';
 import { t, browserLang, fmt } from './i18n.js';
 import { scoreQuestion, decodeAnswer } from './scoring.js';
 import { PASS_PERCENT } from './config.js';
-import { h, questionHeader, questionText, questionBody, answerStats, meter } from './render.js';
+import { h, questionHeader, questionText, questionBody, answerStats, meter, fitToScreen } from './render.js';
 import qrcode from './vendor/qrcode.mjs';
 
 const app = document.getElementById('app');
@@ -67,7 +67,7 @@ function route() {
   if (!user) {
     return show(demoBanner(), topBar(), h('main.card.narrow',
       h('h1', L.trainerTitle),
-      h('button.primary.big', { type: 'button', onclick: () => auth.signIn().catch((e) => alert(e.message)) }, L.loginGithub),
+      h('button.primary', { type: 'button', onclick: () => auth.signIn().catch((e) => alert(e.message)) }, L.loginGithub),
     ));
   }
   if (!user.isTrainer) {
@@ -85,6 +85,7 @@ async function dashboard() {
   const index = await loadIndex();
   const catSel = h('select#cat', index.map((c) => h('option', { value: c.file }, c.title[uiLang])));
   const langSel = h('select#lang', h('option', { value: 'de' }, 'Deutsch'), h('option', { value: 'en' }, 'English'));
+  const shuffleBox = h('input#shuffle', { type: 'checkbox' });
   const list = h('div.sessions', h('p', '…'));
   const adminBox = h('div');
 
@@ -94,12 +95,16 @@ async function dashboard() {
       h('form.row', {
         onsubmit: async (e) => {
           e.preventDefault();
-          const code = await store.createSession({ catalog: catSel.value, lang: langSel.value });
+          const cat = await loadCatalog(catSel.value);
+          const code = await store.createSession({
+            catalog: catSel.value, lang: langSel.value, shuffle: shuffleBox.checked ? cat.questions.length : 0,
+          });
           location.hash = code;
         },
       },
         h('label', L.catalog, catSel),
         h('label', L.language, langSel),
+        h('label.check', shuffleBox, L.shuffle),
         h('button.primary', { type: 'submit' }, L.create),
       ),
       h('h2', L.mySessions),
@@ -113,7 +118,7 @@ async function dashboard() {
     h('tbody', sessions.map((s) => h('tr',
       h('td.mono', s.code),
       h('td', index.find((c) => c.file === s.catalog)?.title[uiLang] || s.catalog),
-      h('td', s.lang.toUpperCase()),
+      h('td', s.lang.toUpperCase() + (s.order ? ` · ${L.shuffled}` : '')),
       h('td', s.createdAt ? new Date(s.createdAt).toLocaleString(uiLang) : ''),
       h('td', L.phase[s.state?.phase] || ''),
       h('td.right',
@@ -156,6 +161,11 @@ function adminPanel(box) {
 }
 
 // ---------- running session ----------
+function toggleFullscreen() {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen?.();
+}
+
 async function sessionView(code) {
   const session = await store.getSession(code);
   if (!session || session.owner !== store.uid) {
@@ -164,7 +174,8 @@ async function sessionView(code) {
   }
   const lang = session.lang;
   const catalog = await loadCatalog(session.catalog);
-  const questions = catalog.questions;
+  const order = session.order || catalog.questions.map((_, k) => k);
+  const questions = order.map((k) => catalog.questions[k]); // in the order of this session
   let state = session.state;
   let presence = {};
   let answers = {};
@@ -208,6 +219,7 @@ async function sessionView(code) {
       h('span.code', code),
       h('span.count', L.connected(nConnected)),
       h('a.small', { href: '#' }, L.back),
+      h('button.link', { type: 'button', onclick: toggleFullscreen }, document.fullscreenElement ? L.fullscreenOff : L.fullscreen),
     ], lang);
     const phase = state.phase;
 
@@ -223,14 +235,14 @@ async function sessionView(code) {
             h('p.bigcode', code),
             h('p.counter', L.connected(nConnected)),
           )),
-        h('div.actions', btn(L.start, actions.start, '.primary.big')),
+        h('div.actions', btn(L.start, actions.start, '.primary')),
       ));
     }
     if (phase === 'paused') {
       return show(demoBanner(lang), bar, h('main.card.center',
         h('h1.pause', L.pauseTitle),
         h('p', L.pauseText),
-        h('div.actions', btn(L.continue, actions.cont, '.primary.big')),
+        h('div.actions', btn(L.continue, actions.cont, '.primary')),
       ));
     }
     if (phase === 'finished') {
@@ -249,7 +261,7 @@ async function sessionView(code) {
       card.append(questionBody(q, lang, 'show'));
       card.append(h('div.counterline', h('span.counter', L.submittedCount(nGiven)), h('span.small', L.connected(nConnected))));
       card.append(h('div.actions',
-        btn(L.reveal, actions.reveal, '.primary.big'),
+        btn(L.reveal, actions.reveal, '.primary'),
         btn(L.skip, actions.skip),
         btn(L.pause, actions.pause),
         btn(L.finish, actions.finish, '.danger'),
@@ -259,13 +271,22 @@ async function sessionView(code) {
       card.append(questionBody(q, lang, 'stats', { stats }));
       card.append(h('div.counterline', h('span.counter', L.votes(stats.n)), stats.n ? null : h('span.small', L.noVotes)));
       card.append(h('div.actions',
-        btn(last ? L.toResults : L.next, actions.next, '.primary.big'),
+        btn(last ? L.toResults : L.next, actions.next, '.primary'),
         btn(L.pause, actions.pause),
         last ? null : btn(L.finish, actions.finish, '.danger'),
       ));
     }
     show(demoBanner(lang), bar, h('div.withcorner', card, corner));
+    fitToScreen(card);
   }
+  const refit = () => {
+    const card = app.querySelector('.card.beamer');
+    if (card) fitToScreen(card);
+  };
+  window.addEventListener('resize', refit);
+  stopSession.push(() => window.removeEventListener('resize', refit));
+  document.addEventListener('fullscreenchange', render);
+  stopSession.push(() => document.removeEventListener('fullscreenchange', render));
 
   function summary(lang) {
     const L = t(lang);
@@ -314,7 +335,7 @@ async function sessionView(code) {
       h('h3', L.hardest),
       h('table.list.rates', h('tbody', perQ.map(({ i, q, rate, n }) => h('tr',
         h('td.mono', i + 1),
-        h('td.qshort', q.text[lang]),
+        h('td.qshort', q.text[lang], h('span.qid', ` ${q.id}`)),
         h('td.ratecell', meter(Math.round(rate * 100), `${Math.round(rate * 100)} % · ${L.votes(n)}`, rate >= PASS_PERCENT / 100)),
       )))),
     );

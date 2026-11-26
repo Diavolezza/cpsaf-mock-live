@@ -30,11 +30,21 @@ const letter = (i) => String.fromCharCode(97 + i) + ')';
 
 export function questionHeader(q, index, total, lang) {
   const L = t(lang);
-  return h('div.qhead',
-    h('span.qnum', L.questionOf(index + 1, total)),
-    h('span.qtype', L.typeLabel[q.type]),
-    h('span.qpoints', L.points(q.points)),
+  return h('div.qheadwrap',
+    h('div.qhead',
+      h('span.qnum', L.questionOf(index + 1, total)),
+      h('span.qtype', L.typeLabel[q.type]),
+      h('span.qpoints', L.points(q.points)),
+    ),
+    progress(index + 1, total),
   );
+}
+
+// progress through the exam: question i of n
+export function progress(done, total) {
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  return h('div.progress', { role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': total, 'aria-valuenow': done },
+    h('div.pfill', { style: `width:${pct}%` }));
 }
 
 export function questionText(q, lang) {
@@ -55,7 +65,7 @@ export function questionBody(q, lang, mode, opts = {}) {
 }
 
 function choiceBody(q, lang, mode, { selection = [], onChange, locked, mine, stats }) {
-  const list = h('ol.options');
+  const list = h('ol.options' + (mode === 'stats' ? '.stats' : ''));
   q.options.forEach((o, i) => {
     const selected = mode === 'input' ? selection.includes(i) : mode === 'result' ? !!mine?.includes(i) : false;
     const showCorrect = mode === 'result' || mode === 'stats';
@@ -63,9 +73,11 @@ function choiceBody(q, lang, mode, { selection = [], onChange, locked, mine, sta
     if (selected) cls.push('selected');
     if (showCorrect && o.correct) cls.push('correct');
     if (mode === 'result' && selected && !o.correct) cls.push('wrong');
-    const box = h('span.box', { 'aria-hidden': 'true' }, selected ? '✕' : '');
+    // trainer solution: the tick sits in the box; participant result: own cross in the box, tick on the right
+    const tickInBox = mode === 'stats' && o.correct;
+    const box = h('span.box' + (tickInBox ? '.tickbox' : ''), { 'aria-hidden': 'true' }, tickInBox ? '✓' : selected ? '✕' : '');
     const content = [box, h('span.letter', letter(i)), h('span.otext', o[lang])];
-    if (showCorrect && o.correct) content.push(h('span.tick', { title: t(lang).correct }, '✓'));
+    if (mode === 'result' && o.correct) content.push(h('span.tick', { title: t(lang).correct }, '✓'));
     let el;
     if (mode === 'input') {
       el = h('button.' + cls.join('.'), {
@@ -81,7 +93,31 @@ function choiceBody(q, lang, mode, { selection = [], onChange, locked, mine, sta
   return list;
 }
 
-function kBody(q, lang, mode, { selection = [], onChange, locked, mine, stats }) {
+function kBody(q, lang, mode, opts) {
+  return mode === 'show' || mode === 'stats' ? kTable(q, lang, mode, opts) : kCards(q, lang, mode, opts);
+}
+
+// trainer: one line per statement, two columns for the categories
+function kTable(q, lang, mode, { stats }) {
+  const L = t(lang);
+  const cats = q.categories[lang];
+  return h('table.ktable' + (mode === 'stats' ? '.stats' : ''),
+    h('thead', h('tr', h('th', ''), cats.map((c) => h('th.kcat', c)))),
+    h('tbody', q.rows.map((r, i) => h('tr',
+      h('td.ktext', h('span.letter', letter(i)), ' ', r[lang],
+        mode === 'stats' && stats.rows[i][2] > 0 ? h('span.kempty', ` (${L.empty}: ${stats.rows[i][2]})`) : null),
+      cats.map((_, ci) => {
+        const good = mode === 'stats' && r.answer === ci;
+        return h('td.kcell' + (good ? '.correct' : ''),
+          h('div.kcellin',
+            h('span.box' + (good ? '.tickbox' : ''), { 'aria-hidden': 'true' }, good ? '✓' : ''),
+            mode === 'stats' ? bar(stats.rows[i][ci], stats.n, good, lang) : null));
+      }),
+    ))),
+  );
+}
+
+function kCards(q, lang, mode, { selection = [], onChange, locked, mine }) {
   const cats = q.categories[lang];
   const wrap = h('div.krows');
   q.rows.forEach((r, i) => {
@@ -90,13 +126,13 @@ function kBody(q, lang, mode, { selection = [], onChange, locked, mine, stats })
     const btns = h('div.kchoices');
     cats.forEach((c, ci) => {
       const selected = mode === 'input' ? selection[i] === ci : mode === 'result' ? mine?.[i] === ci : false;
-      const showCorrect = mode === 'result' || mode === 'stats';
+      const showCorrect = mode === 'result';
       const cls = ['kopt'];
       if (selected) cls.push('selected');
       if (showCorrect && r.answer === ci) cls.push('correct');
       if (mode === 'result' && selected && r.answer !== ci) cls.push('wrong');
       const content = [h('span.box', { 'aria-hidden': 'true' }, selected ? '✕' : ''), h('span.klabel', c)];
-      if (showCorrect && r.answer === ci) content.push(h('span.tick', '✓'));
+      if (mode === 'result' && r.answer === ci) content.push(h('span.tick', '✓'));
       if (mode === 'input') {
         btns.append(h('button.' + cls.join('.'), {
           type: 'button', role: 'radio', 'aria-checked': String(selected), disabled: locked,
@@ -107,14 +143,9 @@ function kBody(q, lang, mode, { selection = [], onChange, locked, mine, stats })
           },
         }, content));
       } else {
-        const el = h('div.' + cls.join('.'), content);
-        if (mode === 'stats') el.append(bar(stats.rows[i][ci], stats.n, r.answer === ci, lang));
-        btns.append(el);
+        btns.append(h('div.' + cls.join('.'), content));
       }
     });
-    if (mode === 'stats' && stats.rows[i][2] > 0) {
-      btns.append(h('div.kempty', `${t(lang).empty}: ${stats.rows[i][2]}`));
-    }
     row.append(btns);
     wrap.append(row);
   });
@@ -123,7 +154,7 @@ function kBody(q, lang, mode, { selection = [], onChange, locked, mine, stats })
 
 function bar(count, n, correct, lang) {
   const pct = n ? Math.round((count / n) * 100) : 0;
-  return meter(pct, `${pct} % · ${t(lang).votes(count)}`, correct);
+  return meter(pct, `${pct} % (${count})`, correct);
 }
 
 export function meter(pct, label, good) {
@@ -159,3 +190,14 @@ export function legend(lang) {
 }
 
 export { fmt };
+
+// Scales an element down (CSS zoom) until it fits into the window height. Used for the beamer view.
+export function fitToScreen(el, min = 0.55) {
+  el.style.zoom = '';
+  const fits = () => el.getBoundingClientRect().bottom <= window.innerHeight - 8;
+  let z = 1;
+  while (!fits() && z > min) {
+    z = Math.round((z - 0.05) * 100) / 100;
+    el.style.zoom = String(z);
+  }
+}
