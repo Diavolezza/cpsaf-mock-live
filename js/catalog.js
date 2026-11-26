@@ -45,7 +45,7 @@ export function validateCatalog(cat) {
       if (!Array.isArray(q.options) || q.options.length < 2) { err.push(`${w}: at least two options needed`); return; }
       q.options.forEach((o, j) => bilingual(o, `${w} option ${j + 1}`));
       const nCorrect = q.options.filter((o) => o.correct === true).length;
-      if (q.type === 'A' && nCorrect !== 1) err.push(`${w}: A question needs exactly one correct option (has ${nCorrect})`);
+      if (q.type === 'A' && nCorrect !== 1) err.push(`${w}: A-Question needs exactly one correct option (has ${nCorrect})`);
       if (q.type === 'P') {
         if (!Number.isInteger(q.pick) || q.pick < 1) err.push(`${w}: pick missing`);
         else if (nCorrect !== q.pick) err.push(`${w}: pick is ${q.pick}, but ${nCorrect} options are marked correct`);

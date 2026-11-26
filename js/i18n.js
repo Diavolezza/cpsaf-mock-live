@@ -113,7 +113,7 @@ const T = {
     pauseText: 'After the break we continue where we stopped.',
     questionOf: (i, n) => `Question ${i} of ${n}`,
     points: (p) => `${fmtEn(p)} ${p === 1 ? 'point' : 'points'}`,
-    typeLabel: { A: 'A question', P: 'P question', K: 'K question' },
+    typeLabel: { A: 'A-Question', P: 'P-Question', K: 'K-Question' },
     instruction: (q) =>
       q.type === 'A'
         ? 'Choose one answer.'
