@@ -12,5 +12,8 @@ export const firebaseConfig = {
   appId: '1:26489378074:web:6b2334a8d11cbe4e86c8a3',
 };
 
+// Shown to GitHub users who are not trainers yet: whom to ask for approval.
+export const ADMIN_CONTACT = { name: 'Gerhard Wanner', email: 'gerhard.wanner@hft-stuttgart.de' };
+
 // Pass mark in percent of the reachable points.
 export const PASS_PERCENT = 60;

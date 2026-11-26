@@ -4,7 +4,7 @@ import { makeStore, qkey, askedIndices } from './store.js';
 import { loadIndex, loadCatalog } from './catalog.js';
 import { t, browserLang, fmt } from './i18n.js';
 import { scoreQuestion, decodeAnswer } from './scoring.js';
-import { PASS_PERCENT } from './config.js';
+import { PASS_PERCENT, ADMIN_CONTACT } from './config.js';
 import { h, questionHeader, questionText, questionBody, answerStats, meter, fitToScreen } from './render.js';
 import qrcode from './vendor/qrcode.mjs';
 
@@ -71,7 +71,12 @@ function route() {
     ));
   }
   if (!user.isTrainer) {
-    return show(topBar(), h('main.card.narrow', h('h1', L.trainerTitle), h('p', L.notTrainer),
+    const subject = encodeURIComponent(`${L.trainerTitle}: ${user.login || user.name}`);
+    return show(topBar(), h('main.card.narrow', h('h1', L.trainerTitle),
+      h('p', L.notTrainer),
+      h('p', L.contactAdmin(ADMIN_CONTACT.name), ' ',
+        h('a', { href: `mailto:${ADMIN_CONTACT.email}?subject=${subject}` }, ADMIN_CONTACT.email)),
+      h('p.small', L.reloadAfter),
       h('p.small', `GitHub: ${user.login || user.name || user.uid}`)));
   }
   const code = location.hash.slice(1).toUpperCase();
