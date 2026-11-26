@@ -1,0 +1,850 @@
+# Fragenkatalog / question catalogue
+# type: A = Einfachauswahl (single choice), P = Mehrfachauswahl (pick n), K = zeilenweise Zuordnung (two categories per row)
+# A/P: options[].correct: true marks the correct answers; P: pick = number of answers to choose
+# K:   categories = the two column labels; rows[].answer = index of the correct column (0 or 1)
+title:
+  de: iSAQB® CPSA-F® Beispielprüfung
+  en: iSAQB® CPSA-F® Mock Exam
+version: '2026.2'
+source:
+  de: 'Quelle und Copyright: International Software Architecture Qualification Board e. V. (iSAQB® e. V.), Beispielprüfung CPSA-F®, Version 2026.2. Nur zur Prüfungsvorbereitung, nicht für echte Prüfungen.'
+  en: 'Source and copyright: International Software Architecture Qualification Board e. V. (iSAQB® e. V.), CPSA-F® Mock Exam, version 2026.2. For exam preparation only, not for real examinations.'
+passPercent: 60
+questions:
+- id: Q-20-04-01
+  type: A
+  points: 1
+  text:
+    de: Wie viele Definitionen des Begriffes „Softwarearchitektur“ gibt es?
+    en: How many definitions of “software architecture” exist?
+  options:
+  - de: Genau eine für alle Arten von Systemen.
+    en: Exactly one for all kinds of systems.
+  - de: Eine für jede Art von Softwaresystem (z. B. „eingebettet“, „Echtzeit“, „Entscheidungsunterstützung“, „Web“, „Batch“, ...).
+    en: One for every kind of software system (e.g. “embedded”, “real-time”, “decision support”, “web”, “batch”, ...).
+  - de: Ein Dutzend oder mehr unterschiedliche Definitionen.
+    en: A dozen or more different definitions.
+    correct: true
+- id: Q-20-04-02
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Welche der folgenden Aspekte werden durch den Begriff „Softwarearchitektur“ abgedeckt?
+    en: Which of the following aspects are covered by the term “software architecture”?
+  options:
+  - de: Komponenten
+    en: Components
+    correct: true
+  - de: Querschnittskonzepte
+    en: Cross-cutting concepts
+    correct: true
+  - de: (interne und externe) Schnittstellen
+    en: (internal and external) Interfaces
+    correct: true
+  - de: Programmierkonventionen („coding conventions“)
+    en: Coding conventions
+  - de: Hardware-Sizing
+    en: Hardware sizing
+- id: Q-17-13-01
+  type: P
+  points: 2
+  pick: 4
+  text:
+    de: Welche VIER der folgenden Aussagen zu (Querschnitts-) Konzepten sind am zutreffendsten?
+    en: Which FOUR of the following statements about (crosscutting) concepts are most appropriate?
+  options:
+  - de: Durch die einheitliche Verwendung von Konzepten wird die Kopplung zwischen Bausteinen verringert.
+    en: Uniform usage of concepts reduces coupling between building blocks.
+  - de: Durch die Definition von geeigneten Konzepten wird die Mustertreue der Architektur sichergestellt.
+    en: The definition of appropriate concepts ensures the pattern compliance of the architecture.
+  - de: Eine einheitliche Ausnahmebehandlung (Exception Handling) kann man gut erreichen, indem die Architekt:innen mit den Entwickler:innen vor der Implementierung ein geeignetes Konzept vereinbaren.
+    en: Uniform exception handling can be achieved when architects agree with developers upon a suitable concept prior to implementation.
+    correct: true
+  - de: Für jedes Qualitätsziel sollte es ein explizit dokumentiertes Konzept geben.
+    en: For each quality goal there should be an explicitly documented concept.
+  - de: Konzepte sind ein Mittel zur Erhöhung der Konsistenz.
+    en: Concepts are a means to increase consistency.
+    correct: true
+  - de: Ein Konzept kann Einschränkungen für die Umsetzung vieler Bausteine definieren.
+    en: A concept can define constraints for the implementation of many building blocks.
+    correct: true
+  - de: Ein Konzept kann durch einen einzigen Baustein umgesetzt werden.
+    en: A concept might be implemented by a single building block.
+    correct: true
+- id: Q-17-13-02
+  type: K
+  points: 1
+  text:
+    de: Bei Ihrem Projekt arbeiten drei Architekt:innen und sieben Entwickler:innen an der Dokumentation der Softwarearchitektur. Welche Methoden eignen sich zur Gewährleistung einer konsistenten und zweckmäßigen Dokumentation und welche nicht?
+    en: In your project, three architects and seven developers are working on the documentation of the software architecture. Which methods are appropriate in order to achieve a consistent and adequate documentation, and which are not?
+  categories:
+    de:
+    - Geeignet
+    - Nicht geeignet
+    en:
+    - Appropriate
+    - Not appropriate
+  rows:
+  - de: Die/der leitende Architekt:in koordiniert die Erstellung der Dokumentation.
+    en: The lead architect coordinates the creation of the documentation.
+    answer: 0
+  - de: Für die Dokumentation werden identische Vorlagen verwendet.
+    en: Identical templates are used for the documentation.
+    answer: 0
+  - de: Alle Teile der Dokumentation werden automatisch aus dem Quellcode extrahiert.
+    en: All parts of the documentation are automatically extracted from the source code.
+    answer: 1
+- id: Q-17-13-03
+  type: P
+  points: 2
+  pick: 4
+  text:
+    de: Welche der folgenden Techniken sind am besten zur Darstellung von Abläufen oder Laufzeitverhalten geeignet?
+    en: Which of the following techniques are best suited to illustrate the workflow or behavior of the system at runtime?
+  options:
+  - de: Flussdiagramme
+    en: Flowcharts
+    correct: true
+  - de: Aktivitätsdiagramme
+    en: Activity Diagrams
+    correct: true
+  - de: Darstellung von Screenflows (Abfolge von Benutzerinteraktionen)
+    en: Depiction of screen flows (sequence of user interactions)
+  - de: Sequenzdiagramm
+    en: Sequence diagram
+    correct: true
+  - de: Lineares Venn-Diagramm
+    en: Linear Venn diagram
+  - de: Nummerierte Liste aufeinanderfolgender Schritte
+    en: Numbered list of sequential steps
+    correct: true
+  - de: Tabellarische Schnittstellenbeschreibung
+    en: Tabular description of interfaces
+  - de: Klassendiagramme
+    en: Class diagrams
+- id: Q-17-13-04
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Welche der folgenden Grundsätze gelten für das Testen?
+    en: Which of the following principles apply to testing?
+  options:
+  - de: Im Allgemeinen ist es nicht möglich, sämtliche Fehler eines Systems zu finden.
+    en: In general, it is not possible to discover all errors in the system.
+    correct: true
+  - de: Bei Komponenten mit vielen bekannten vorherigen Fehlern sind die Chancen für zusätzliche Fehler hoch.
+    en: In components with many known previous errors, the chances for additional errors are high.
+    correct: true
+  - de: Durch ausreichendes Testen kann aufgezeigt werden, dass ein Programm fehlerfrei ist.
+    en: Sufficient testing can show that a program is free of errors.
+  - de: Durch Testen kann nur die Existenz von Fehlern aufgezeigt werden, nicht jedoch ihre Abwesenheit.
+    en: Testing shows the existence of errors rather than the absence of errors.
+    correct: true
+  - de: Die funktionale Programmierung erlaubt keine automatisierten Tests.
+    en: Functional programming does not allow automated testing.
+- id: Q-17-13-05
+  type: K
+  points: 2
+  text:
+    de: Welche der folgenden Aussagen zum Entwurfsprinzip „Information Hiding“ sind richtig und welche falsch?
+    en: Which of the following statements regarding the information hiding principle are true and which are false?
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Durch die Befolgung des Prinzips „Information Hiding“ wird die Flexibilität für Änderungen erhöht.
+    en: Adhering to the information hiding principle increases flexibility for modifications.
+    answer: 0
+  - de: Beim Information Hiding werden absichtlich Informationen vor Aufrufern oder Konsumenten des Bausteins verborgen.
+    en: Information hiding involves deliberately hiding information from callers or consumers of the building block.
+    answer: 0
+  - de: Information Hiding erschwert das Bottom-Up Vorgehen.
+    en: Information hiding makes it harder to work bottom-up.
+    answer: 1
+  - de: Information Hiding ist abgeleitet vom Ansatz der inkrementellen Verfeinerung entlang des Kontrollflusses.
+    en: Information hiding is a derivative of the approach of incremental refinement along the control flow.
+    answer: 1
+- id: Q-20-04-03
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Was sind die wichtigsten Ziele von Softwarearchitektur?
+    en: What are the most important goals of software architecture?
+  options:
+  - de: Verbesserung der Genauigkeit von Mustern in Struktur und Implementierung.
+    en: Improve accuracy of patterns in structure and implementation.
+  - de: Erreichung der Qualitätsanforderungen auf nachvollziehbare Weise.
+    en: Achieve quality requirements in a comprehensible way.
+    correct: true
+  - de: Ermöglichung von kosteneffizienten Integrations- und Abnahmetests des Systems.
+    en: Enable cost-effective integration and acceptance tests of the system.
+  - de: Ermöglichung eines grundlegenden Verständnisses der Strukturen und Konzepte für das Entwicklungsteam und andere Beteiligte.
+    en: Enable a basic understanding of structures and concepts for the development team and other stakeholders.
+    correct: true
+- id: Q-20-04-12
+  type: K
+  points: 1
+  text:
+    de: Stellen Sie sich vor, Sie sind Softwarearchitekt:in für eine große und verteilte Geschäftsanwendung im Banken- oder Versicherungsbereich. Welche der folgenden Aussagen sind für diese Situation richtig und welche falsch?
+    en: Put yourself in the position of a software architect for a large, distributed business application in the banking or insurance domain. Which of the following statements is true and which is false?
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Die Architektur sollte so aufgebaut sein, dass häufig vorkommende Änderungen an den entsprechenden Geschäftsprozessen ohne umfangreiche Umstrukturierungen der Softwarearchitektur möglich sind.
+    en: The architecture should be designed so that frequent changes to the related business processes are possible without extensive restructuring of the software architecture.
+    answer: 0
+  - de: Erforderliche Produktqualitäten sollten Ihre architektonischen Entscheidungen leiten.
+    en: Required product qualities should drive your architectural decisions.
+    answer: 0
+  - de: Die Softwarearchitektur kann völlig unabhängig von Hardware und Infrastruktur entworfen werden.
+    en: The software architecture can be designed completely independent of the hardware and infrastructure.
+    answer: 1
+- id: Q-20-04-04
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Was sind Ihre wichtigsten Verantwortlichkeiten als Softwarearchitekt:in in Bezug auf Anforderungen?
+    en: What are your most important responsibilities as a software architect with respect to requirements?
+  options:
+  - de: Unterstützung der Fachexpert:innen dabei, Qualitätsanforderungen konkret und explizit zu formulieren.
+    en: Support the business people to specify explicit and concrete quality requirements.
+    correct: true
+  - de: Hilfe bei der Identifizierung von neuen Geschäftsmöglichkeiten anhand Ihres technischen Know-hows.
+    en: Help to identify new business opportunities based on your technology know-how.
+    correct: true
+  - de: Ablehnung von Anforderungen, die technische Risiken enthalten.
+    en: Reject business requirements that contain technical risks.
+  - de: Umformulierung aller Geschäftsanforderungen, so dass sie für Ihr Entwicklungsteam verständlich sind.
+    en: Capture all business requirements in a terminology that can be understood by your development team.
+  - de: Überprüfung der Anforderungen auf technische Machbarkeit.
+    en: Check requirements for technological feasibility.
+    correct: true
+- id: Q-20-04-07
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Sie sind als Architekt:in dafür zuständig, ein Altsystem entsprechend den laufenden Betriebsanforderungen am Laufen zu halten. Was sind Ihre wichtigsten Aufgaben?
+    en: You are responsible as an architect for keeping a legacy system up and running according to the ongoing requirements of your business. What are the most important action items on your agenda?
+  options:
+  - de: Verhandlung des Wartungsbudgets für Ihr Team
+    en: Negotiating the maintenance budget for your team
+  - de: Sicherstellung einer aktuellen Dokumentation des ausgelieferten Systems
+    en: Assuring up-to-date documentation of the deployed system
+    correct: true
+  - de: Analyse der Auswirkungen von neuen Anforderungen auf das aktuelle System
+    en: Analyzing the impact of new requirements on the current system
+    correct: true
+  - de: Ermunterung der Teammitglieder, neue Programmiersprachen zu lernen
+    en: Encouraging the team members to learn new programming languages
+  - de: Ihren Vorgesetzten technologische Updates zusätzlich zu den Geschäftsanforderungen vorschlagen
+    en: Suggesting technology updates in addition to the business requirements to your management
+    correct: true
+- id: Q-21-05-01
+  type: K
+  points: 2
+  text:
+    de: Welche der folgenden Aussagen zu Architekturentscheidungen sind wahr, welche falsch?
+    en: Which of the following statements regarding architecture decisions are true, which are false?
+  categories:
+    de:
+    - Wahr
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Architekturentscheidungen müssen nie aufgeschrieben werden, da diese bereits dem Entwicklungsteam bekannt sind.
+    en: Architecture decisions never need to be written down because they are already known to the development team.
+    answer: 1
+  - de: Architecture Decision Records helfen dabei, Entscheidungen in ihrem Kontext nachzuvollziehen.
+    en: An architecture decision record helps to make the decision’s context understood.
+    answer: 0
+  - de: Nachdem man sich für ein zentrales Framework (z.B. Persistenzframework) entschieden hat, darf diese Entscheidung nicht mehr geändert werden.
+    en: Once a decision has been made on a central or fundamental framework (e.g. persistence framework), that decision must not be changed.
+    answer: 1
+  - de: Qualitätsanforderungen helfen maßgeblich bei Architekturentscheidungen.
+    en: Quality requirements help significantly with architecture decisions.
+    answer: 0
+- id: Q-20-04-09
+  type: K
+  points: 2
+  text:
+    de: Geben Sie für jede der folgenden Aussagen an, ob sie richtig oder falsch ist.
+    en: Decide for each of the following statements whether it is true or false.
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Jede Iteration eines agilen Entwicklungsvorgehens kann Auswirkungen auf architektonische Grundsatzentscheidungen haben.
+    en: Each iteration of an agile development approach could have an impact on the fundamental architecture decisions.
+    answer: 0
+  - de: Der Gesamtaufwand für Architekturarbeit ist bei iterativen Projekten wesentlich höher als bei Wasserfall-Projekten.
+    en: The total effort spent on architectural work is much higher in iterative projects compared to waterfall projects.
+    answer: 1
+  - de: Agile Projekte benötigen keine Architekturdokumente, da das Entwicklungsteam in täglichen Standup-Meetings Entscheidungen kommuniziert.
+    en: Agile projects do not need architecture documents since the development team uses daily standup-meetings to communicate decisions.
+    answer: 1
+  - de: Wenn Ihr System aus einer Reihe von Microservices besteht, ist kein zentrales Architekturdokument erforderlich, da jeder Service seine Technologien auswählen kann.
+    en: If your systems consist of a set of microservices there is no need for a central architecture document since each service is free to choose its technologies.
+    answer: 1
+- id: Q-20-04-10
+  type: K
+  points: 2
+  text:
+    de: Geben Sie an, welche der folgenden Aussagen zu Projektzielen und Architekturzielen richtig und welche falsch sind.
+    en: Which of the following statements regarding project goals and architectural goals is true and which is false.
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Projektziele können funktionale Anforderungen sowie Qualitätsanforderungen umfassen.
+    en: Project Goals can include functional requirements as well as quality requirements.
+    answer: 0
+  - de: Architekturziele leiten sich von den Qualitätsanforderungen für das System oder Produkt ab.
+    en: Architectural goals are derived from the quality requirements for the system or product.
+    answer: 0
+  - de: Stakeholder aus dem Business sollten sich auf Geschäftsziele konzentrieren und sich nicht mit Architekturzielen auseinandersetzen.
+    en: Business stakeholders should concentrate on business goals and not interfere with architectural goals.
+    answer: 1
+  - de: Zur Vermeidung von Konflikten sollten Geschäfts- und Architekturziele einander nicht überlappen.
+    en: To avoid conflicts, business goals and architectural goals should be non-overlapping sets.
+    answer: 1
+- id: Q-20-04-11
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Was bedeutet die Regel „explizit, nicht implizit“ für die Architekturarbeit? Wählen Sie die passendsten Antworten aus.
+    en: What does the rule “explicit, not implicit” mean for architecture work? Choose the best-fitting answers.
+  options:
+  - de: Architekt:innen sollten rekursive Strukturen vermeiden und durch explizite Schleifen ersetzen.
+    en: Architects should avoid recursive structures and replace them by explicit loops.
+  - de: Architekt:innen sollten die Annahmen, die zu Entscheidungen führen, explizit machen.
+    en: Architects should make the assumptions leading to decisions explicit.
+    correct: true
+  - de: Architekt:innen sollten explizit auf Erläuterungen (d.h. Kommentare) in natürlicher Sprache für jeden Baustein bestehen.
+    en: Architects should explicitly insist on natural language explanations (i.e. comments) for each building block.
+  - de: Architekt:innen sollten explizit auf schriftlichen oder zumindest mündlichen Begründungen für Aufwandschätzungen der Entwicklung von ihrem Team bestehen.
+    en: Architects should explicitly insist on written or at least verbal justifications for development effort estimates from their team.
+  - de: Architekt:innen sollten die Voraussetzungen für ihre Entscheidungen explizit darlegen.
+    en: Architects should make prerequisites for their decisions explicit.
+    correct: true
+- id: Q-20-04-32
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Es gibt zahlreiche Ansätze, die zu einer Softwarearchitektur führen. Welche der folgenden Ansätze kommen in der Praxis am häufigsten vor?
+    en: There are many approaches that lead to a software architecture. Which of the following are the most often found in practice?
+  options:
+  - de: User-Interface Driven Design
+    en: User interface driven design
+  - de: Domain-driven Design
+    en: Domain driven design
+    correct: true
+  - de: Sichtenbasierte Architekturentwicklung
+    en: View based architecture development
+    correct: true
+  - de: Bottom-up Design
+    en: Bottom-up design
+    correct: true
+  - de: Mehrheitsentscheid
+    en: Majority voting
+- id: Q-20-04-38
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Diverse Architekturentwicklungsmethoden schlagen einen sichtenbasierten Ansatz vor. Welche der folgenden Sichten werden am häufigsten verwendet?
+    en: Several architecture development methods suggest a view-based approach. Which of the following views are most often used?
+  options:
+  - de: Physische Datenbanksicht
+    en: Physical database view
+  - de: Kontextsicht
+    en: Context view
+    correct: true
+  - de: Bausteinsicht oder Komponentensicht
+    en: Building Block/Component view
+    correct: true
+  - de: Testbasierte Sicht
+    en: Test-driven view
+  - de: Konfigurationssicht
+    en: Configuration view
+  - de: Laufzeitsicht
+    en: Runtime view
+    correct: true
+- id: Q-20-04-22
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Sie dokumentieren einen Baustein einer Softwarearchitektur. Welche Informationen sollten in seiner Black-Box-Beschreibung enthalten sein?
+    en: When documenting a building block of your software architecture, what information should the black-box description contain?
+  options:
+  - de: Öffentliche Schnittstellen.
+    en: Public interfaces.
+    correct: true
+  - de: Verantwortlichkeiten des Bausteins.
+    en: Responsibility of the building block.
+    correct: true
+  - de: Interne Struktur des Bausteins.
+    en: Internal structure of the building block.
+  - de: Spezifikation von Implementierungsdetails.
+    en: Specification of the implementation details.
+- id: Q-20-04-17
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Welche Voraussetzungen müssen vor der Entwicklung einer Softwarearchitektur erfüllt sein? Wählen Sie die passendsten Antworten aus.
+    en: Which prerequisites have to be fulfilled before developing a software architecture? Pick the most appropriate answers.
+  options:
+  - de: Die Anforderungsspezifikation für das System ist vollständig, detailliert und konsistent.
+    en: The requirements specification for the system is complete, detailed and consistent.
+  - de: Die wichtigsten Qualitätsanforderungen an das System sind bekannt.
+    en: The most important qualities for the system are known.
+    correct: true
+  - de: Die organisatorischen Randbedingungen sind bekannt.
+    en: Organizational constraints are known.
+    correct: true
+  - de: Die Programmiersprache wurde ausgewählt.
+    en: The programming language has been selected.
+  - de: Die Hardware für das Entwicklungsteam ist verfügbar.
+    en: Hardware for the development team is available.
+- id: Q-20-04-18
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Welche Faktoren können den Entwurf einer Softwarearchitektur beeinflussen? Wählen Sie die passendsten Antworten aus.
+    en: Which factors can influence the design of a software architecture? Pick the most appropriate answers.
+  options:
+  - de: Politische.
+    en: Political.
+    correct: true
+  - de: Organisatorische.
+    en: Organizational.
+    correct: true
+  - de: Technische.
+    en: Technical.
+    correct: true
+  - de: Virtuelle.
+    en: Virtual.
+- id: Q-20-04-19
+  type: A
+  points: 1
+  text:
+    de: Welche der folgenden Eigenschaften lässt sich am ehesten durch eine Schichtenarchitektur verbessern?
+    en: Which of the following qualities can most likely be improved by using a layered architecture?
+  options:
+  - de: Laufzeiteffizienz (Performance).
+    en: Runtime efficiency (performance).
+  - de: Flexibilität bei der Modifizierung oder Änderung des Systems.
+    en: Flexibility in modifying or changing the system.
+    correct: true
+  - de: Flexibilität bei der Laufzeit (Konfigurierbarkeit).
+    en: Flexibility at runtime (configurability).
+  - de: Nichtabstreitbarkeit.
+    en: Non-repudiability.
+- id: Q-20-04-33
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Für welche Entwurfsprobleme bietet das Pipes & Filter Pattern Lösungsansätze?
+    en: Which type of problems provide a good fit for the Pipes & Filter Pattern?
+  options:
+  - de: Verwaltung von globalem Anwendungszustand
+    en: Management of global application state
+  - de: Strukturierung von IT-Systemen die Datenströme verarbeiten
+    en: IT systems which process data streams
+    correct: true
+  - de: Entkopplung von Verarbeitungsschritten
+    en: Decoupling multiple steps of an execution
+    correct: true
+  - de: Entkopplung von zeitlichen Abhängigkeiten
+    en: Temporal decoupling of an application
+- id: Q-20-04-20
+  type: A
+  points: 1
+  text:
+    de: Welche Ziele versuchen Sie mit dem Dependency-Inversion-Prinzip zu erreichen?
+    en: Which goals are you trying to achieve with the dependency inversion principle?
+  options:
+  - de: Große Bausteine sollen nicht von kleinen Bausteinen abhängen.
+    en: Big building blocks shall not depend on small building blocks.
+  - de: Komponenten sollen in der Lage sein, abhängige Komponenten leichter zu erstellen.
+    en: Components shall be able to create dependent components more easily.
+  - de: Bausteine sollen nur über Abstraktionen voneinander abhängen.
+    en: Building blocks shall only depend on each other via abstractions.
+    correct: true
+- id: Q-20-04-21
+  type: K
+  points: 2
+  text:
+    de: Was sind die Eigenschaften von enger (hoher) bzw. loser (niedriger) Kopplung?
+    en: What are characteristics of tight (high) or loose (low) coupling?
+  categories:
+    de:
+    - Enge Kopplung
+    - Lose Kopplung
+    en:
+    - Tight coupling
+    - Loose coupling
+  rows:
+  - de: Bausteine können abhängige Bausteine direkt, d.h. ohne Umwege über Schnittstellen oder Abstraktionen, aufrufen.
+    en: Building blocks directly call dependent building blocks, i.e., without using indirect calls via interfaces or abstractions.
+    answer: 0
+  - de: Bausteine verwenden gemeinsame komplexe Datenstrukturen.
+    en: Building blocks use shared complex data structures.
+    answer: 0
+  - de: Bausteine verwenden eine gemeinsame Tabelle (für Schreib- und Leseoperationen) innerhalb einer relationalen Datenbank.
+    en: Building blocks use a shared table (for read- and write operations) within a relational database.
+    answer: 0
+  - de: Beim Baustein-Design haben Sie das Dependency-Inversion-Prinzip konsequent umgesetzt.
+    en: When designing building blocks, you have consistently applied the dependency inversion principle.
+    answer: 1
+- id: Q-20-04-14
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: 'Welche Aussagen zum „Don’t repeat yourself“-Prinzip (DRY) treffen am ehesten zu? Anders gesagt: Was könnte passieren, wenn Teile des Quellcodes oder der Konfiguration im System mehrfach vorhanden sind?'
+    en: 'Which statements about the principle “Don’t repeat yourself” (DRY) fit best? In other words: What could happen, if parts of the source code or configuration do exist in multiple copies in the system?'
+  options:
+  - de: DRY verringert die Sicherheit.
+    en: DRY reduces security.
+  - de: Die strenge Einhaltung von DRY könnte zu höherer Kopplung führen.
+    en: Strict adherence to DRY could lead to higher coupling.
+    correct: true
+  - de: Die Komponenten des Systems mit redundantem Code können unabhängig voneinander verbessert werden.
+    en: The components of the system that contain redundant code can be improved independently of each other.
+    correct: true
+  - de: Die Einhaltung von DRY führt zu einer Verringerung der Angriffsvektoren in der IT-Sicherheit.
+    en: Adherence to DRY leads to fewer attack vectors in IT security.
+  - de: Die Anwendung der Schichtenmuster ermöglicht eine konsistente Anwendung des DRY-Prinzips.
+    en: Applying the Layer patterns allows a consistent application of the DRY principle.
+- id: Q-20-04-15
+  type: K
+  points: 2
+  text:
+    de: Sie können Aspekte Ihrer Softwarearchitektur mündlich und/oder schriftlich kommunizieren. In welchem Zusammenhang stehen diese Möglichkeiten zueinander? Geben Sie für jede der folgenden Aussagen an, ob sie richtig oder falsch ist.
+    en: You can communicate aspects of your software architecture verbally and/or in writing. How do these variants correlate? Decide for each of the following statements whether it is true or false.
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Mündliche Kommunikation sollte schriftliche Dokumentation ergänzen.
+    en: Verbal communication should supplement written documentation.
+    answer: 0
+  - de: Feedback zu Architekturentscheidungen sollte zur Sicherstellung der Nachverfolgbarkeit grundsätzlich schriftlich erfolgen.
+    en: Feedback to architecture decisions should always be done in writing to ensure traceability.
+    answer: 1
+  - de: Schriftliche Dokumentation sollte immer mündlicher Kommunikation vorausgehen.
+    en: Written documentation should always precede verbal communication.
+    answer: 1
+  - de: Architekt:innen sollten sich eine Variante (mündlich oder schriftlich) aussuchen und während der gesamten Entwicklung dabei bleiben.
+    en: Architects should pick one variant (verbal or written) and stick to this choice during the whole development.
+    answer: 1
+- id: Q-20-04-37
+  type: K
+  points: 2
+  text:
+    de: Welche der folgenden Aussagen zu Notationen für Architektursichten sind richtig und welche falsch?
+    en: Which of the following statements about notations for architectural views is true and which is false?
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Business Process Model & Notation (BPMN) sollte nur von Business-Analysten und nicht zur Architekturdokumentation verwendet werden.
+    en: Business Process Model & Notation (BPMN) should only be used by Business Analysts and not for architecture documentation.
+    answer: 1
+  - de: UML-Verteilungsdiagramme sind die einzige Möglichkeit zur Dokumentation des Mappings der Softwarekomponenten in Bezug auf die Infrastruktur.
+    en: UML deployment models are the only way to document the mapping of software components to infrastructure.
+    answer: 1
+  - de: UML-Paketdiagramme können zum Festhalten der Bausteinsicht der Softwarearchitektur verwendet werden.
+    en: UML Package Diagrams can be used to capture the building-block view of software architectures.
+    answer: 0
+  - de: Solange die Notation (z. B. mithilfe einer Legende) erläutert wird, kann eine beliebige Notation ausreichen, um Bausteinstrukturen und Zusammenarbeit zu beschreiben.
+    en: As long as the notation is explained (e.g. by a legend), any notation can be sufficient to describe building block structures and collaboration.
+    answer: 0
+- id: Q-20-04-13
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Welche Architektursichten haben die beste praktische Anwendung für die Entwicklung von Softwarearchitekturen?
+    en: Which architectural views have the most practical application for developing software architectures?
+  options:
+  - de: Pattern-Sicht.
+    en: Pattern View.
+  - de: Beobachtersicht (Observer-View).
+    en: Observer View.
+  - de: Bausteinsicht (Komponentensicht).
+    en: Building-Block View (Component View).
+    correct: true
+  - de: Verteilungssicht.
+    en: Deployment View.
+    correct: true
+- id: Q-20-04-23
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: In der Kontextsicht können Sie einen geschäftlichen Kontext („business context“) und einen technischen Kontext verwenden. Wählen Sie die am besten passenden Antworten für den technischen Kontext aus.
+    en: The context view might contain a business context and a technical context, or both. Pick the most appropriate answers that apply to the technical context.
+  options:
+  - de: Der technische Kontext enthält die physischen Übertragungskanäle zwischen Ihrem System und der Umgebung.
+    en: The technical context contains the physical channels between your system and its environment.
+    correct: true
+  - de: Der technische Kontext enthält die gesamte Infrastruktur, über die die Komponenten Ihres Systems verteilt werden.
+    en: The technical context contains all the infrastructure on which the components of your system are deployed.
+  - de: Der technische Kontext sollte die Hardware-Preisliste oder die Preisgestaltung von Cloud-Diensten, die als Infrastruktur für Ihre Architektur verwendet werden, enthalten.
+    en: The technical context should include hardware pricing or pricing of cloud services used as infrastructure for your architecture.
+  - de: Der technische Kontext enthält Informationen zur gewählten Programmiersprache sowie allen zur Implementierung Ihrer Softwarearchitektur verwendeten Frameworks.
+    en: The technical context contains information about the chosen programming language as well as all frameworks used to implement your software architecture.
+  - de: Der technische Kontext enthält gegebenenfalls andere Elemente als der Geschäftskontext („business context“).
+    en: The technical context might contain different elements than the business context.
+    correct: true
+- id: Q-20-04-24
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Die Dokumentation der Softwarearchitektur sollte Beschreibungen der Querschnittskonzepte enthalten. Wählen Sie die besten Gründe, warum die Dokumentation von Querschnittskonzepten sinnvoll ist.
+    en: Software architecture documentation could contain descriptions of cross-cutting concerns. Pick the best reasons why documentation of cross-cutting concerns is useful.
+  options:
+  - de: Querschnittskonzepte sollten sich auf die Fachdomäne konzentrieren und frei von technischen Informationen sein.
+    en: Cross-cutting concepts should focus on the domain and be free of technical information.
+  - de: Aspekte oder Konzepte, die in mehreren Teilen Ihrer Softwarearchitektur verwendet werden, sollten auf nicht redundante Weise beschrieben werden.
+    en: Aspects or concepts that are used in multiple parts of your software architecture should be described in a non-redundant way.
+    correct: true
+  - de: Querschnittskonzepte können in weiteren Produkten innerhalb der gleichen Organisation erneut verwendet werden.
+    en: Cross-cutting concepts can be reused in more products within the same organization.
+    correct: true
+  - de: Querschnittskonzepte sollten von Spezialist:innen implementiert werden. Daher ist eine separate Dokumentation hilfreich.
+    en: Cross-cutting concepts should be implemented by specialists. Therefore, separate documentation is useful.
+- id: Q-20-04-25
+  type: K
+  points: 2
+  text:
+    de: Was sind Richtlinien für ein gutes Schnittstellen-Design? Kreuzen Sie an, welche der folgenden Aussagen richtig und welche falsch sind.
+    en: What are guidelines for good interface design? Check which of the following statements are true and which are false.
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Die Verwendung der Schnittstellen sollte einfach zu erlernen sein.
+    en: Use of interfaces should be easy to learn.
+    answer: 0
+  - de: Es soll möglich sein, angemessen verständlichen Client-Code für diese Schnittstelle zu schreiben.
+    en: It should be possible to write client code for the interface, that is reasonably easy to understand.
+    answer: 0
+  - de: Eine Schnittstelle soll Zugriff auf eine umfassende Menge von Implementierungsdetails ermöglichen.
+    en: An interface should provide access to a comprehensive set of implementation details.
+    answer: 1
+  - de: Schnittstellenspezifikationen sollten funktionale und nichtfunktionale Aspekte enthalten.
+    en: Interface specifications should contain functional and non-functional aspects.
+    answer: 0
+  - de: Lokale und entfernte („remote“) Aufrufe einer Schnittstelle sollen sich in allen Belangen identisch verhalten.
+    en: Local and remote calls to an interface should behave identically in all aspects.
+    answer: 1
+- id: Q-20-04-26
+  type: K
+  points: 2
+  text:
+    de: 'Eine Definition lautet: „Softwarearchitektur ist die Summe aller während der Entwicklung gefällten Entscheidungen“. Kreuzen Sie an, welche der folgenden Aussagen zu Architektur- /Designentscheidungen richtig und welche falsch sind.'
+    en: 'One definition says: “Software architecture is the sum of all the decisions you have taken during development.” Check which of the following statements about architectural/design decisions are true and which are false.'
+  categories:
+    de:
+    - Richtig
+    - Falsch
+    en:
+    - 'True'
+    - 'False'
+  rows:
+  - de: Architektonische Entscheidungen können sich in der Struktur der Bausteine oder Komponenten niederschlagen.
+    en: Architectural decisions can impact the structure of the building block or components.
+    answer: 0
+  - de: Softwarearchitekt:innen sollten alle Entwurfsentscheidungen schriftlich begründen.
+    en: Software architects shall justify all design decisions in writing.
+    answer: 1
+  - de: Architektonische Entscheidungen können untereinander Wechselwirkungen haben.
+    en: Architectural decisions can have interdependencies between each other.
+    answer: 0
+  - de: Kompromisse zwischen zueinander in Konflikt stehenden Qualitätsanforderungen sollten explizite Entscheidungen sein.
+    en: Tradeoffs between conflicting quality requirements should be explicit decisions.
+    answer: 0
+- id: Q-20-04-31
+  type: K
+  points: 2
+  text:
+    de: Welche der folgenden Aussagen sind typische Gründe zur Einführung einer Architekturdokumentation und welche nicht?
+    en: Which of the following statements are typical reasons for introducing an architecture documentation and which are not typical reasons?
+  categories:
+    de:
+    - Typisch
+    - Nicht typisch
+    en:
+    - Typical
+    - Not typical
+  rows:
+  - de: Unterstützung des Onboardings neuer Entwickler:innen.
+    en: To support onboarding of new developers.
+    answer: 0
+  - de: Unterstützung der Testautomatisierung des Systems.
+    en: To support the automated testing approach of the system.
+    answer: 1
+  - de: Unterstützung der Arbeit von verteilten Teams.
+    en: To support the work of distributed teams.
+    answer: 0
+  - de: Unterstützung von späteren Verbesserungen des Systems.
+    en: To assist in future enhancements of the product.
+    answer: 0
+  - de: Einhaltung regulatorischer Vorgaben.
+    en: To conform to regulatory or legal constraints.
+    answer: 0
+  - de: Sicherstellung der gleichmäßigen Auslastung des Teams.
+    en: To ensure that developers have enough work to do.
+    answer: 1
+- id: Q-20-04-30
+  type: K
+  points: 2
+  text:
+    de: Welche der folgenden Eigenschaftspaare stehen üblicherweise miteinander in Konflikt und welche nicht?
+    en: Which of the following pairs of qualities are usually in conflict to each other, and which are not?
+  categories:
+    de:
+    - Konflikt
+    - Kein Konflikt
+    en:
+    - Conflict
+    - No conflict
+  rows:
+  - de: Verständlichkeit – Lesbarkeit
+    en: Understandability – Readability
+    answer: 1
+  - de: Benutzerfreundlichkeit – Sicherheit
+    en: Usability – Security
+    answer: 0
+  - de: Laufzeitkonfigurierbarkeit – Robustheit
+    en: Runtime configurability – Robustness
+    answer: 0
+  - de: Sicherheit – Funktionale Korrektheit
+    en: Security – Functional correctness
+    answer: 1
+- id: Q-20-04-27
+  type: A
+  points: 1
+  text:
+    de: ISO 25010 enthält allgemeine Qualitätseigenschaften für Softwaresysteme. Wie können Qualitätsanforderungen zu diesen Eigenschaften konkretisiert werden?
+    en: ISO 25010 provides generic quality characteristics for software systems. How can quality requirements concerning these characteristics be made more concrete?
+  options:
+  - de: Durch Entwickeln von UI-Prototypen.
+    en: By developing UI prototypes.
+  - de: Durch Definieren expliziter Schnittstellen.
+    en: By defining explicit interfaces.
+  - de: Durch Erstellen, Verfassen oder Diskutieren von Qualitätsszenarien.
+    en: By discussing or writing quality scenarios.
+    correct: true
+  - de: Durch Erstellen automatisierter Tests.
+    en: By creating automated tests.
+- id: Q-20-04-28
+  type: P
+  points: 2
+  pick: 4
+  text:
+    de: Welche der folgenden Punkte sind am besten geeignet, die qualitative Bewertung einer Softwarearchitektur bzgl. der Erfüllung von Qualitätsanforderungen zu unterstützen?
+    en: Which of the following points are best suited to support the qualitative evaluation of a software architecture with regard to the fulfillment of quality requirements?
+  options:
+  - de: Quantitative Abhängigkeitsanalyse.
+    en: Quantitative dependency analysis.
+    correct: true
+  - de: Architekturmodelle.
+    en: Architecture models.
+    correct: true
+  - de: Qualitätsszenarien.
+    en: Quality scenarios.
+    correct: true
+  - de: Teamgröße.
+    en: Team size.
+  - de: Logdateien.
+    en: Log files.
+    correct: true
+  - de: Organigramm.
+    en: Organizational structure.
+- id: Q-20-04-29
+  type: P
+  points: 1
+  pick: 2
+  text:
+    de: Sie versuchen, Ihre Architektur qualitativ zu analysieren. Was sind die zutreffendsten Anzeichen für architektonische Problembereiche?
+    en: You try to analyze your architecture qualitatively. Which are the most appropriate indicators for architectural problem areas?
+  options:
+  - de: Hohe Kopplung der Komponenten.
+    en: High coupling of components.
+    correct: true
+  - de: Namen öffentlicher Methoden geben nicht deren Zweck wieder.
+    en: Names of public methods do not reflect their purpose.
+  - de: Fehlende Kommentare.
+    en: Missing comments.
+  - de: Häufung von Fehlern in bestimmten Bausteinen des Systems.
+    en: Clusters of errors in certain building blocks of the system.
+    correct: true
+  - de: Anzahl der Testfälle pro Komponente.
+    en: Number of test cases per component.
+- id: Q-20-04-36
+  type: P
+  points: 1
+  pick: 3
+  text:
+    de: Sie versuchen, ihre Architektur quantitativ zu untersuchen. Welche der folgenden Größen können Sie für Ihre Softwarearchitektur zuverlässig messen? Wählen Sie die am besten passenden Antworten aus.
+    en: You try to quantitatively analyze your architecture. Which three of the following properties can you measure reliably in your software architecture? Pick the best fitting answers.
+  options:
+  - de: Größe der Bausteine (z. B. Lines-of-Code).
+    en: Size of building blocks (e.g. LOC).
+    correct: true
+  - de: Änderungsrate des Quellcodes der Komponenten.
+    en: Change rate of the source code of components.
+    correct: true
+  - de: Kohäsion der Architekturkomponenten.
+    en: Cohesion of the architectural components.
+  - de: Sicherheitsstufe einer Komponente.
+    en: Security level of a component.
+  - de: Anzahl der Personen, die zu einer bestimmten Komponente beigetragen haben.
+    en: Number of the developers that contributed to a specific component.
+    correct: true

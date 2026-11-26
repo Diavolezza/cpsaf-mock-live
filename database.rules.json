@@ -1,0 +1,70 @@
+{
+  "rules": {
+    // Trainer accounts and admins are maintained by admins (the first admin is entered by hand in the console).
+    "admins": {
+      "$uid": { ".read": "auth != null && auth.uid == $uid" }
+    },
+    "trainers": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() == true",
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() == true"
+      }
+    },
+    // A GitHub user who is not a trainer yet leaves a request.
+    "trainerRequests": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() == true",
+      "$uid": {
+        ".write": "auth != null && ((auth.uid == $uid && auth.token.firebase.sign_in_provider == 'github.com') || root.child('admins').child(auth.uid).val() == true)",
+        ".validate": "!newData.exists() || (newData.hasChildren(['name', 'login']) && newData.child('name').isString() && newData.child('name').val().length < 200 && newData.child('login').isString() && newData.child('login').val().length < 100)"
+      }
+    },
+    "sessions": {
+      // trainers list their own sessions
+      ".read": "auth != null && query.orderByChild == 'owner' && query.equalTo == auth.uid",
+      ".indexOn": ["owner"],
+      "$code": {
+        // anyone signed in (also anonymous participants) may read a session they know the code of
+        ".read": "auth != null",
+        // trainers create sessions, only the owner changes or deletes them
+        ".write": "auth != null && ((!data.exists() && root.child('trainers').child(auth.uid).exists() && newData.child('owner').val() == auth.uid) || data.child('owner').val() == auth.uid)",
+        ".validate": "!newData.exists() || (newData.hasChildren(['owner', 'catalog', 'lang', 'state']) && newData.child('owner').val() == (data.exists() ? data.child('owner').val() : auth.uid))"
+      }
+    },
+    "participants": {
+      "$code": {
+        ".read": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
+        ".write": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
+        "$uid": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid && root.child('sessions').child($code).exists()"
+        }
+      }
+    },
+    "presence": {
+      "$code": {
+        ".read": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
+        ".write": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
+        "$uid": {
+          ".write": "auth != null && auth.uid == $uid && (!newData.exists() || root.child('sessions').child($code).exists())",
+          ".validate": "newData.val() == true"
+        }
+      }
+    },
+    "answers": {
+      "$code": {
+        // the trainer reads all answers of his session (and may delete them with the session)
+        ".read": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid",
+        ".write": "auth != null && root.child('sessions').child($code).child('owner').val() == auth.uid && !newData.exists()",
+        "$uid": {
+          ".read": "auth != null && auth.uid == $uid",
+          "$q": {
+            // a participant answers once, only the open question, only while voting is open
+            ".write": "auth != null && auth.uid == $uid && !data.exists() && root.child('sessions').child($code).child('state/phase').val() == 'answering' && root.child('sessions').child($code).child('state/qkey').val() == $q",
+            ".validate": "newData.hasChildren(['a', 't']) && newData.child('a').isString() && newData.child('a').val().length <= 100 && newData.child('t').val() <= now"
+          }
+        }
+      }
+    }
+  }
+}

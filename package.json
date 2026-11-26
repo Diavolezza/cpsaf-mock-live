@@ -1,0 +1,16 @@
+{
+  "name": "cpsaf-mock-live",
+  "private": true,
+  "type": "module",
+  "description": "Live mock exam for the iSAQB CPSA-F certification (German/English)",
+  "scripts": {
+    "test": "node --test test/scoring.test.js test/catalog.test.js",
+    "test:rules": "firebase emulators:exec --only database --project demo-cpsaf \"node --test test/rules.test.js\"",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
+    "firebase": "13.4.0",
+    "firebase-tools": "^15.0.0"
+  }
+}
