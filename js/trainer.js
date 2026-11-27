@@ -162,7 +162,8 @@ function adminPanel(box, index) {
     trainers.replaceChildren(h('table.list', h('tbody', Object.entries(tr).map(([uid, x]) => h('tr',
       h('td', x.name || ''), h('td.mono', x.login ? '@' + x.login : ''),
       h('td.right', uid === user.uid ? '' : h('button.danger', {
-        type: 'button', onclick: () => confirm(`${x.login || x.name}?`) && store.removeTrainer(uid),
+        type: 'button',
+        onclick: () => confirm(L.removeTrainerConfirm(x.name || '@' + x.login)) && store.removeTrainer(uid),
       }, L.delete)),
     )))));
   }));

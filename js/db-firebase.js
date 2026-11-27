@@ -62,36 +62,50 @@ export async function createFirebaseDb(config) {
 // Trainers: GitHub sign-in. Unknown GitHub accounts leave a request that an admin approves.
 export function createFirebaseAuth(config) {
   init(config);
-  let lastLogin = null;
+  // The GitHub user name is only delivered with the result of the sign-in popup, which arrives
+  // after onAuthStateChanged has already fired. It is therefore kept in the browser and the
+  // trainer request is written again once it is known.
+  const loginKey = (uid) => `cpsaf-gh-login:${uid}`;
+  const knownLogin = (user) => localStorage.getItem(loginKey(user.uid)) || user.reloadUserInfo?.screenName || '';
+  async function writeRequest(user, info) {
+    const trainer = await get(ref(rtdb, `trainers/${user.uid}`)).then((s) => s.val()).catch(() => null);
+    if (trainer) return true;
+    await set(ref(rtdb, `trainerRequests/${user.uid}`), {
+      name: info.name, login: info.login, email: info.email, at: serverTimestamp(),
+    }).catch((e) => console.error('request', e));
+    return false;
+  }
+  const infoOf = (user) => {
+    const gh = user.providerData.find((p) => p.providerId === 'github.com') || {};
+    return {
+      uid: user.uid,
+      name: user.displayName || gh.displayName || '',
+      login: knownLogin(user),
+      email: user.email || gh.email || '',
+    };
+  };
   return {
     demo: false,
     onChange(cb) {
       return onAuthStateChanged(auth, async (user) => {
         if (!user || user.isAnonymous) return cb(null);
-        const gh = user.providerData.find((p) => p.providerId === 'github.com') || {};
-        const info = {
-          uid: user.uid,
-          name: user.displayName || gh.displayName || '',
-          login: lastLogin || user.reloadUserInfo?.screenName || '',
-          email: user.email || gh.email || '',
-        };
-        const [trainer, admin] = await Promise.all([
-          get(ref(rtdb, `trainers/${user.uid}`)).then((s) => s.val()).catch(() => null),
+        const info = infoOf(user);
+        const [isTrainer, admin] = await Promise.all([
+          writeRequest(user, info),
           get(ref(rtdb, `admins/${user.uid}`)).then((s) => s.val()).catch(() => null),
         ]);
-        info.isTrainer = !!trainer;
+        info.isTrainer = isTrainer;
         info.isAdmin = admin === true;
-        if (!info.isTrainer) {
-          await set(ref(rtdb, `trainerRequests/${user.uid}`), {
-            name: info.name, login: info.login, email: info.email, at: serverTimestamp(),
-          }).catch((e) => console.error('request', e));
-        }
         cb(info);
       });
     },
     async signIn() {
       const res = await signInWithPopup(auth, new GithubAuthProvider());
-      lastLogin = getAdditionalUserInfo(res)?.username || null;
+      const login = getAdditionalUserInfo(res)?.username;
+      if (login) {
+        localStorage.setItem(loginKey(res.user.uid), login);
+        await writeRequest(res.user, infoOf(res.user)); // adds the user name to a pending request
+      }
     },
     signOut: () => signOut(auth),
     db: () => makeDb(auth.currentUser.uid),
